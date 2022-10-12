@@ -16,7 +16,7 @@ async function run(): Promise<void> {
     const role: string = getInput('role')
     info(`role: ${role}`)
 
-    const token = getInput('token')
+    const token = getInput('token', { required: true })
     const issueNumber = context.payload.issue && context.payload.issue.number
     const octokit = getOctokit(token)
 
@@ -26,8 +26,8 @@ async function run(): Promise<void> {
       for (const user of users) {
         promises.push(
           octokit.rest.repos.addCollaborator({
-            owner: context.payload.organization.login,
-            repo: repository,
+            owner: repository.split('/')[0],
+            repo: repository.split('/')[1],
             username: user,
             permission: role === 'write' ? 'push' : 'pull',
           }),
@@ -36,11 +36,11 @@ async function run(): Promise<void> {
     }
 
     const result = await Promise.all(promises)
-    info(JSON.stringify(result))
 
     let message = ''
+     
     for (const response of result) {
-      message += `Added ${response.username} to ${response.repo} with ${response.permission} permissions\n`
+      message += response.data ? `Added ${response.data.invitee.login} to ${response.data.repository.full_name} with ${response.data.permissions} permissions\n` : ''
     }
 
     octokit.rest.issues.createComment({
