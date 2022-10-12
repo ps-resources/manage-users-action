@@ -1,11 +1,19 @@
 name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+description: 'Run this action to provide access to users for certain repositories'
+author: 'gateixeira'
 inputs:
-  milliseconds: # change this
+  users:
     required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+    description: 'GitHub slug of users to provide access to'
+  repositories:
+    required: true
+    description: 'GitHub slug of respositories to provide access to'
+  role:
+    required: true
+    description: 'Role of the user in the repository'
+  token:
+    required: true
+    description: 'Personal Access Token or GITHUB_TOKEN (or comma separated tokens)'
 runs:
-  using: 'node16'
+  using: 'node12'
   main: 'dist/index.js'
