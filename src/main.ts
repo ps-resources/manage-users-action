@@ -33,35 +33,37 @@ async function run(): Promise<void> {
             permission: role === 'write' ? 'push' : 'pull'
           })
         } else if (action === 'remove') {
+          try {
             const isCollaborator = await octokit.rest.repos.checkCollaborator({
               owner: repository.split('/')[0],
               repo: repository.split('/')[1],
               username: user
             })
           
-            if (isCollaborator.status === 204) {
-              info(`Removing ${user} from ${repository}`)
-              await octokit.rest.repos.removeCollaborator({
+            info(`Removing ${user} from ${repository}`)
+            await octokit.rest.repos.removeCollaborator({
+              owner: repository.split('/')[0],
+              repo: repository.split('/')[1],
+              username: user
+            })
+          } catch (e) {
+            info(`User ${user} is not a collaborator on ${repository}`)
+
+            const invitations = await octokit.rest.repos.listInvitations({
+              owner: repository.split('/')[0],
+              repo: repository.split('/')[1]
+            })
+
+            const invitation = invitations.data.find(invitation => invitation.invitee?.login === user)
+            if (invitation) {
+              info(`Cancelling invitation for ${user} to ${repository}`)
+              await octokit.rest.repos.deleteInvitation({
                 owner: repository.split('/')[0],
                 repo: repository.split('/')[1],
-                username: user
+                invitation_id: invitation.id
               })
-            } else {
-              const invitations = await octokit.rest.repos.listInvitations({
-                owner: repository.split('/')[0],
-                repo: repository.split('/')[1]
-              })
-
-              const invitation = invitations.data.find(invitation => invitation.invitee?.login === user)
-              if (invitation) {
-                info(`Cancelling invitation for ${user} to ${repository}`)
-                await octokit.rest.repos.deleteInvitation({
-                  owner: repository.split('/')[0],
-                  repo: repository.split('/')[1],
-                  invitation_id: invitation.id
-                })
-              }
             }
+          }
         } else { 
           throw new Error('Action must be add or remove')
         }

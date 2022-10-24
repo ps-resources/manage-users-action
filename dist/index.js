@@ -47,12 +47,12 @@ function run() {
                         });
                     }
                     else if (action === 'remove') {
-                        const isCollaborator = yield octokit.rest.repos.checkCollaborator({
-                            owner: repository.split('/')[0],
-                            repo: repository.split('/')[1],
-                            username: user
-                        });
-                        if (isCollaborator.status === 204) {
+                        try {
+                            const isCollaborator = yield octokit.rest.repos.checkCollaborator({
+                                owner: repository.split('/')[0],
+                                repo: repository.split('/')[1],
+                                username: user
+                            });
                             (0, core_1.info)(`Removing ${user} from ${repository}`);
                             yield octokit.rest.repos.removeCollaborator({
                                 owner: repository.split('/')[0],
@@ -60,7 +60,8 @@ function run() {
                                 username: user
                             });
                         }
-                        else {
+                        catch (e) {
+                            (0, core_1.info)(`User ${user} is not a collaborator on ${repository}`);
                             const invitations = yield octokit.rest.repos.listInvitations({
                                 owner: repository.split('/')[0],
                                 repo: repository.split('/')[1]
