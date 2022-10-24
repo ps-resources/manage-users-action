@@ -37,59 +37,44 @@ function run() {
             (0, core_1.info)(`role: ${role}`);
             const action = (0, core_1.getInput)('action');
             (0, core_1.info)(`action: ${action}`);
-            let message = '';
             for (const repository of repositories) {
                 for (const user of users) {
                     if (action === 'add') {
+                        (0, core_1.info)(`Adding ${user} to ${repository} with role ${role}`);
                         const response = yield octokit.rest.repos.addCollaborator({
                             owner: repository.split('/')[0],
                             repo: repository.split('/')[1],
                             username: user,
                             permission: role === 'write' ? 'push' : 'pull'
                         });
-                        if (response.status === 201)
-                            message += `Added @${user} to [${repository}](https://github.com/${repository}) with \`${role}\` access`;
-                        else
-                            message += `Failed to add @${user} to [${repository}](https://github.com/${repository}) with \`${role}\` access.`;
                     }
                     else if (action === 'remove') {
-                        try {
-                            const isCollaborator = yield octokit.rest.repos.checkCollaborator({
+                        const isCollaborator = yield octokit.rest.repos.checkCollaborator({
+                            owner: repository.split('/')[0],
+                            repo: repository.split('/')[1],
+                            username: user
+                        });
+                        if (isCollaborator.status === 204) {
+                            (0, core_1.info)(`Removing ${user} from ${repository}`);
+                            yield octokit.rest.repos.removeCollaborator({
                                 owner: repository.split('/')[0],
                                 repo: repository.split('/')[1],
                                 username: user
                             });
-                            if (isCollaborator.status === 204) {
-                                const response = yield octokit.rest.repos.removeCollaborator({
-                                    owner: repository.split('/')[0],
-                                    repo: repository.split('/')[1],
-                                    username: user
-                                });
-                                if (response.status === 204)
-                                    message += `Removed @${user} from [${repository}](https://github.com/${repository})`;
-                                else
-                                    message += `Failed to remove @${user} from [${repository}](https://github.com/${repository})`;
-                            }
-                            else {
-                                message += `@${user} is not a collaborator on [${repository}](https://github.com/${repository})`;
-                            }
                         }
-                        catch (error) {
+                        else {
                             const invitations = yield octokit.rest.repos.listInvitations({
                                 owner: repository.split('/')[0],
                                 repo: repository.split('/')[1]
                             });
                             const invitation = invitations.data.find(invitation => { var _a; return ((_a = invitation.invitee) === null || _a === void 0 ? void 0 : _a.login) === user; });
                             if (invitation) {
-                                const response = yield octokit.rest.repos.deleteInvitation({
+                                (0, core_1.info)(`Cancelling invitation for ${user} to ${repository}`);
+                                yield octokit.rest.repos.deleteInvitation({
                                     owner: repository.split('/')[0],
                                     repo: repository.split('/')[1],
                                     invitation_id: invitation.id
                                 });
-                                message += `Cancelled invitation of @${user} from [${repository}](https://github.com/${repository})`;
-                            }
-                            else {
-                                message += `No invitation of @${user} from [${repository}](https://github.com/${repository})`;
                             }
                         }
                     }
@@ -98,10 +83,6 @@ function run() {
                     }
                 }
             }
-            octokit.rest.issues.createComment(Object.assign(Object.assign({}, github_1.context.repo), { issue_number: issueNumber, body: message }));
-            const label = action === 'add' ? 'added' : 'removed';
-            octokit.rest.issues.addLabels(Object.assign(Object.assign({}, github_1.context.repo), { issue_number: issueNumber, labels: [label] }));
-            octokit.rest.issues.update(Object.assign(Object.assign({}, github_1.context.repo), { issue_number: issueNumber, state: 'closed' }));
         }
         catch (error) {
             if (error instanceof Error) {
