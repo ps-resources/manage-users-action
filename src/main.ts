@@ -1,10 +1,9 @@
-import {getInput, info, setFailed} from '@actions/core'
-import {context, getOctokit} from '@actions/github'
+import {getInput, info, error, setFailed} from '@actions/core'
+import {getOctokit} from '@actions/github'
 
 async function run(): Promise<void> {
   const token = getInput('token', {required: true})
   const octokit = getOctokit(token)
-  const issueNumber = context.payload.issue && context.payload.issue.number
 
   try {
     const users: string[] = getInput('users').replace(/\s/g, '').split(',')
@@ -68,27 +67,9 @@ async function run(): Promise<void> {
         }
       }
     }
-  } catch (error) {
-    if (error instanceof Error) {
-      const issue = await octokit.rest.issues.get({
-        ...context.repo,
-        issue_number: issueNumber as number
-      })
-      
-      octokit.rest.issues.createComment({
-        ...context.repo,
-        issue_number: issueNumber as number,
-        body: `@${issue.data.assignee?.login}: there was an error: ${error.message}`
-      })
-
-      octokit.rest.issues.addLabels({
-        ...context.repo,
-        issue_number: issueNumber as number,
-        labels: ['error']
-      })
-      
-      setFailed(error.message)
-    }
+  } catch (e: any) {
+    error(`Error adding users to repositories: ${e.message}`);
+    setFailed(e.message);
   }
 }
 
