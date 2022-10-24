@@ -19,11 +19,9 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core_1 = __nccwpck_require__(2186);
 const github_1 = __nccwpck_require__(5438);
 function run() {
-    var _a;
     return __awaiter(this, void 0, void 0, function* () {
         const token = (0, core_1.getInput)('token', { required: true });
         const octokit = (0, github_1.getOctokit)(token);
-        const issueNumber = github_1.context.payload.issue && github_1.context.payload.issue.number;
         try {
             const users = (0, core_1.getInput)('users').replace(/\s/g, '').split(',');
             for (const user of users) {
@@ -84,13 +82,9 @@ function run() {
                 }
             }
         }
-        catch (error) {
-            if (error instanceof Error) {
-                const issue = yield octokit.rest.issues.get(Object.assign(Object.assign({}, github_1.context.repo), { issue_number: issueNumber }));
-                octokit.rest.issues.createComment(Object.assign(Object.assign({}, github_1.context.repo), { issue_number: issueNumber, body: `@${(_a = issue.data.assignee) === null || _a === void 0 ? void 0 : _a.login}: there was an error: ${error.message}` }));
-                octokit.rest.issues.addLabels(Object.assign(Object.assign({}, github_1.context.repo), { issue_number: issueNumber, labels: ['error'] }));
-                (0, core_1.setFailed)(error.message);
-            }
+        catch (e) {
+            (0, core_1.error)(`Error adding users to repositories: ${e.message}`);
+            (0, core_1.setFailed)(e.message);
         }
     });
 }
