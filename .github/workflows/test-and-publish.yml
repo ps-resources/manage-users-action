@@ -21,7 +21,7 @@ jobs:
 
       - name: Retrieve the admin token
         id: github-app
-        uses: getsentry/action-github-app-token@97c9e23
+        uses: getsentry/action-github-app-token@97c9e23528286821f97fba885c1b1123284b29cc
         with:
           app_id: ${{ secrets.APP_ID }}
           private_key: ${{ secrets.APP_PRIVATE_KEY }}
@@ -42,7 +42,7 @@ jobs:
 
       - name: Retrieve the admin token
         id: github-app
-        uses: getsentry/action-github-app-token@97c9e23
+        uses: getsentry/action-github-app-token@97c9e23528286821f97fba885c1b1123284b29cc
         with:
           app_id: ${{ secrets.APP_ID }}
           private_key: ${{ secrets.APP_PRIVATE_KEY }}
