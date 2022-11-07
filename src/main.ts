@@ -1,7 +1,7 @@
 import {error, getInput, info, setFailed} from '@actions/core'
 import {getOctokit} from '@actions/github'
 
-async function validate(token: string, users: string[], repositories: string[]): Promise<void> {
+async function validate(token: string, users: string[], repositories: string[]): Promise<boolean> {
   const octokit = getOctokit(token)
 
   let invalid = false
@@ -30,7 +30,10 @@ async function validate(token: string, users: string[], repositories: string[]):
   if (invalid) {
     error(errorMessage)
     setFailed(errorMessage)
+    return false
   }
+
+  return true
 }
 
 async function run(): Promise<void> {
@@ -55,7 +58,7 @@ async function run(): Promise<void> {
     const action: string = getInput('action')
     info(`action: ${action}`)
 
-    await validate(token, users, repositories)
+    if (!validate(token, users, repositories)) return
 
     const octokit = getOctokit(token)
 
