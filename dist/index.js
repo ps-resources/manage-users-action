@@ -47,7 +47,9 @@ function validate(token, users, repositories) {
         if (invalid) {
             (0, core_1.error)(errorMessage);
             (0, core_1.setFailed)(errorMessage);
+            return false;
         }
+        return true;
     });
 }
 function run() {
@@ -67,7 +69,8 @@ function run() {
             (0, core_1.info)(`role: ${role}`);
             const action = (0, core_1.getInput)('action');
             (0, core_1.info)(`action: ${action}`);
-            yield validate(token, users, repositories);
+            if (!validate(token, users, repositories))
+                return;
             const octokit = (0, github_1.getOctokit)(token);
             for (const repository of repositories) {
                 for (const user of users) {
