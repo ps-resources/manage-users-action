@@ -18,10 +18,37 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core_1 = __nccwpck_require__(2186);
 const github_1 = __nccwpck_require__(5438);
+function validate(token, users, repositories) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const octokit = (0, github_1.getOctokit)(token);
+        let invalid = false;
+        let errorMessage = '';
+        for (const user of users) {
+            const userExists = yield octokit.rest.users.getByUsername({ username: user });
+            if (userExists.status !== 200) {
+                invalid = true;
+                errorMessage += `User ${user} does not exist.\n`;
+            }
+        }
+        for (const repository of repositories) {
+            const repositoryExists = yield octokit.rest.repos.get({
+                owner: repository.split('/')[0],
+                repo: repository.split('/')[1]
+            });
+            if (repositoryExists.status !== 200) {
+                invalid = true;
+                errorMessage += `Repository ${repository} does not exist.\n`;
+            }
+        }
+        if (invalid) {
+            (0, core_1.error)(errorMessage);
+            (0, core_1.setFailed)(errorMessage);
+        }
+    });
+}
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         const token = (0, core_1.getInput)('token', { required: true });
-        const octokit = (0, github_1.getOctokit)(token);
         try {
             const users = (0, core_1.getInput)('users').replace(/\s/g, '').split(',');
             for (const user of users) {
@@ -35,6 +62,8 @@ function run() {
             (0, core_1.info)(`role: ${role}`);
             const action = (0, core_1.getInput)('action');
             (0, core_1.info)(`action: ${action}`);
+            yield validate(token, users, repositories);
+            const octokit = (0, github_1.getOctokit)(token);
             for (const repository of repositories) {
                 for (const user of users) {
                     if (action === 'add') {
