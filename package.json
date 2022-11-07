@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gateixeira/manage-users-action.git"
+    "url": "git+https://github.com/gateixeira-demos/manage-users-action.git"
   },
   "keywords": [
     "actions",
@@ -41,9 +41,9 @@
     "typescript": "^4.4.4"
   },
   "bugs": {
-    "url": "https://github.com/gateixeira/manage-users-action/issues"
+    "url": "https://github.com/gateixeira-demos/manage-users-action/issues"
   },
-  "homepage": "https://github.com/gateixeira/manage-users-action#readme",
+  "homepage": "https://github.com/gateixeira-demos/manage-users-action#readme",
   "directories": {
     "lib": "lib"
   }
