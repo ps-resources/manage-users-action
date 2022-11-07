@@ -1,7 +1,7 @@
 # Manage Users Action
 
-![Check Dist/](https://github.com/gateixeira-demos/manage-users-action/workflows/check-dist/badge.svg)
-![CodeQL](https://github.com/gateixeira-demos/manage-users-action/workflows/codeql-analysis/badge.svg)
+![Check Dist/](https://github.com/gateixeira-demos/manage-users-action/workflows/Check%20Dist%2F/badge.svg)
+![CodeQL](https://github.com/gateixeira-demos/manage-users-action/workflows/CodeQL/badge.svg)
 ![Publish](https://github.com/gateixeira-demos/manage-users-action/workflows/Publish/badge.svg)
 
 This GitHub actions adds and removes multiple users from multiple repositories repositories.
