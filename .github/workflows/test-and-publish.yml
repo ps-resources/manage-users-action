@@ -31,7 +31,7 @@ jobs:
           token: ${{ steps.github-app.outputs.token }}
           users: gateixeira-ghost
           repositories: gateixeira-demos/test1
-          role: read
+          role: pull
           action: add
 
   test-remove:
