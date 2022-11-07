@@ -80,7 +80,7 @@ function run() {
                             owner: repository.split('/')[0],
                             repo: repository.split('/')[1],
                             username: user,
-                            permission: role === 'write' ? 'push' : 'pull'
+                            permission: role
                         });
                     }
                     else if (action === 'remove') {

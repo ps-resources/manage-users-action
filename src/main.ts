@@ -52,7 +52,7 @@ async function run(): Promise<void> {
       info(`repository: ${repository}`)
     }
 
-    const role: string = getInput('role')
+    const role = getInput('role') as 'pull' | 'push' | 'admin' | 'maintain' | 'triage' | undefined
     info(`role: ${role}`)
 
     const action: string = getInput('action')
@@ -70,7 +70,7 @@ async function run(): Promise<void> {
             owner: repository.split('/')[0],
             repo: repository.split('/')[1],
             username: user,
-            permission: role === 'write' ? 'push' : 'pull'
+            permission: role
           })
         } else if (action === 'remove') {
           try {
