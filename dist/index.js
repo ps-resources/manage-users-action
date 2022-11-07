@@ -48,6 +48,7 @@ function validate(token, users, repositories) {
 }
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
+        (0, core_1.info)(`Starting action...`);
         const token = (0, core_1.getInput)('token', { required: true });
         try {
             const users = (0, core_1.getInput)('users').replace(/\s/g, '').split(',');
@@ -118,6 +119,7 @@ function run() {
                 (0, core_1.setFailed)(e.message);
             }
         }
+        (0, core_1.info)(`Finished action.`);
     });
 }
 run();

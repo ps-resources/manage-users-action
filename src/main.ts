@@ -32,6 +32,8 @@ async function validate(token: string, users: string[], repositories: string[]):
 }
 
 async function run(): Promise<void> {
+  info(`Starting action...`)
+
   const token = getInput('token', {required: true})
 
   try {
@@ -108,6 +110,7 @@ async function run(): Promise<void> {
       setFailed(e.message)
     }
   }
+  info(`Finished action.`)
 }
 
 run()
