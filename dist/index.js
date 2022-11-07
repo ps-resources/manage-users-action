@@ -39,7 +39,7 @@ function run() {
                 for (const user of users) {
                     if (action === 'add') {
                         (0, core_1.info)(`Adding ${user} to ${repository} with role ${role}`);
-                        const response = yield octokit.rest.repos.addCollaborator({
+                        yield octokit.rest.repos.addCollaborator({
                             owner: repository.split('/')[0],
                             repo: repository.split('/')[1],
                             username: user,
@@ -48,7 +48,7 @@ function run() {
                     }
                     else if (action === 'remove') {
                         try {
-                            const isCollaborator = yield octokit.rest.repos.checkCollaborator({
+                            yield octokit.rest.repos.checkCollaborator({
                                 owner: repository.split('/')[0],
                                 repo: repository.split('/')[1],
                                 username: user
@@ -66,7 +66,7 @@ function run() {
                                 owner: repository.split('/')[0],
                                 repo: repository.split('/')[1]
                             });
-                            const invitation = invitations.data.find(invitation => { var _a; return ((_a = invitation.invitee) === null || _a === void 0 ? void 0 : _a.login) === user; });
+                            const invitation = invitations.data.find(invite => { var _a; return ((_a = invite.invitee) === null || _a === void 0 ? void 0 : _a.login) === user; });
                             if (invitation) {
                                 (0, core_1.info)(`Cancelling invitation for ${user} to ${repository}`);
                                 yield octokit.rest.repos.deleteInvitation({
@@ -84,8 +84,10 @@ function run() {
             }
         }
         catch (e) {
-            (0, core_1.error)(`Error adding users to repositories: ${e.message}`);
-            (0, core_1.setFailed)(e.message);
+            if (e instanceof Error) {
+                (0, core_1.error)(`Error adding users to repositories: ${e.message}`);
+                (0, core_1.setFailed)(e.message);
+            }
         }
     });
 }

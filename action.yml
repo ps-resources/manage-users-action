@@ -18,5 +18,5 @@ inputs:
     required: true
     description: 'Personal Access Token or GITHUB_TOKEN (or comma separated tokens)'
 runs:
-  using: 'node12'
+  using: 'node16'
   main: 'dist/index.js'

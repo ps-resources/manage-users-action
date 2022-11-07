@@ -1,4 +1,4 @@
-import {getInput, info, error, setFailed} from '@actions/core'
+import {error, getInput, info, setFailed} from '@actions/core'
 import {getOctokit} from '@actions/github'
 
 async function run(): Promise<void> {
@@ -26,7 +26,7 @@ async function run(): Promise<void> {
       for (const user of users) {
         if (action === 'add') {
           info(`Adding ${user} to ${repository} with role ${role}`)
-          const response = await octokit.rest.repos.addCollaborator({
+          await octokit.rest.repos.addCollaborator({
             owner: repository.split('/')[0],
             repo: repository.split('/')[1],
             username: user,
@@ -34,12 +34,12 @@ async function run(): Promise<void> {
           })
         } else if (action === 'remove') {
           try {
-            const isCollaborator = await octokit.rest.repos.checkCollaborator({
+            await octokit.rest.repos.checkCollaborator({
               owner: repository.split('/')[0],
               repo: repository.split('/')[1],
               username: user
             })
-          
+
             info(`Removing ${user} from ${repository}`)
             await octokit.rest.repos.removeCollaborator({
               owner: repository.split('/')[0],
@@ -54,7 +54,7 @@ async function run(): Promise<void> {
               repo: repository.split('/')[1]
             })
 
-            const invitation = invitations.data.find(invitation => invitation.invitee?.login === user)
+            const invitation = invitations.data.find(invite => invite.invitee?.login === user)
             if (invitation) {
               info(`Cancelling invitation for ${user} to ${repository}`)
               await octokit.rest.repos.deleteInvitation({
@@ -64,14 +64,16 @@ async function run(): Promise<void> {
               })
             }
           }
-        } else { 
+        } else {
           throw new Error('Action must be add or remove')
         }
       }
     }
-  } catch (e: any) {
-    error(`Error adding users to repositories: ${e.message}`);
-    setFailed(e.message);
+  } catch (e: unknown) {
+    if (e instanceof Error) {
+      error(`Error adding users to repositories: ${e.message}`)
+      setFailed(e.message)
+    }
   }
 }
 
