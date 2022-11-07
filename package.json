@@ -1,8 +1,7 @@
 {
-  "name": "typescript-action",
-  "version": "0.0.0",
-  "private": true,
-  "description": "TypeScript template action",
+  "name": "manage-users-action",
+  "version": "0.1.0",
+  "description": "Action to add users as external collaborators of repositories",
   "main": "lib/main.js",
   "scripts": {
     "build": "tsc",
@@ -15,14 +14,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/actions/typescript-action.git"
+    "url": "git+https://github.com/gateixeira/manage-users-action.git"
   },
   "keywords": [
     "actions",
     "node",
     "setup"
   ],
-  "author": "",
+  "author": "Guilherme Teixeira",
   "license": "MIT",
   "dependencies": {
     "@actions/core": "^1.10.0",
@@ -40,5 +39,12 @@
     "prettier": "2.5.1",
     "ts-jest": "^27.1.2",
     "typescript": "^4.4.4"
+  },
+  "bugs": {
+    "url": "https://github.com/gateixeira/manage-users-action/issues"
+  },
+  "homepage": "https://github.com/gateixeira/manage-users-action#readme",
+  "directories": {
+    "lib": "lib"
   }
 }

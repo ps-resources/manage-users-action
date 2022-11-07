@@ -1,10 +1,8 @@
-name: 'build-test'
+name: 'build-test-publish'
 on:
-  pull_request:
   push:
     branches:
       - main
-      - 'releases/*'
 
 jobs:
   build:
@@ -55,3 +53,15 @@ jobs:
           repositories: gateixeira-demos/test1
           role:
           action: remove
+
+  publish:
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: npm install
+      - run: npm run build
+      - run: npm run package
+      - run: npx semantic-release
