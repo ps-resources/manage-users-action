@@ -19,9 +19,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
+      - name: Retrieve the admin token
+        id: github-app
+        uses: getsentry/action-github-app-token@v1
+        with:
+          app_id: ${{ secrets.APP_ID }}
+          private_key: ${{ secrets.APP_PRIVATE_KEY }}
+
       - uses: ./
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ steps.github-app.outputs.token }}
           users: gateixeira-ghost
           repositories: gateixeira-demos/test1
           role: read
@@ -29,11 +37,20 @@ jobs:
 
   test-remove:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v3
+
+      - name: Retrieve the admin token
+        id: github-app
+        uses: getsentry/action-github-app-token@v1
+        with:
+          app_id: ${{ secrets.APP_ID }}
+          private_key: ${{ secrets.APP_PRIVATE_KEY }}
+
       - uses: ./
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ steps.github-app.outputs.token }}
           users: gateixeira-ghost
           repositories: gateixeira-demos/test1
           role:
