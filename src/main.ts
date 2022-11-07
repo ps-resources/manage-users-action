@@ -7,19 +7,21 @@ async function validate(token: string, users: string[], repositories: string[]):
   let invalid = false
   let errorMessage = ''
   for (const user of users) {
-    const userExists = await octokit.rest.users.getByUsername({username: user})
-    if (userExists.status !== 200) {
+    try {
+      await octokit.rest.users.getByUsername({username: user})
+    } catch (e) {
       invalid = true
       errorMessage += `User ${user} does not exist.\n`
     }
   }
 
   for (const repository of repositories) {
-    const repositoryExists = await octokit.rest.repos.get({
-      owner: repository.split('/')[0],
-      repo: repository.split('/')[1]
-    })
-    if (repositoryExists.status !== 200) {
+    try {
+      await octokit.rest.repos.get({
+        owner: repository.split('/')[0],
+        repo: repository.split('/')[1]
+      })
+    } catch (e) {
       invalid = true
       errorMessage += `Repository ${repository} does not exist.\n`
     }
