@@ -46,5 +46,10 @@
   "homepage": "https://github.com/gateixeira-demos/manage-users-action#readme",
   "directories": {
     "lib": "lib"
+  },
+  "release": {
+    "branches": [
+      "main"
+    ]
   }
 }
