@@ -23,7 +23,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           users: gateixeira-ghost
-          repositories: gateixeria-demos/test1
+          repositories: gateixeira-demos/test1
           role: read
           action: add
 
@@ -35,6 +35,6 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           users: gateixeira-ghost
-          repositories: gateixeria-demos/test1
+          repositories: gateixeira-demos/test1
           role:
           action: remove
