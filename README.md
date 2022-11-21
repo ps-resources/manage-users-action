@@ -1,8 +1,7 @@
 # Manage Users Action
 
-![Check Dist/](https://github.com/gateixeira-demos/manage-users-action/workflows/Check%20Dist%2F/badge.svg)
-![CodeQL](https://github.com/gateixeira-demos/manage-users-action/workflows/CodeQL/badge.svg)
-![Publish](https://github.com/gateixeira-demos/manage-users-action/workflows/Publish/badge.svg)
+![Check Dist/](https://github.com/ps-resources/manage-users-action/workflows/Check%20Dist%2F/badge.svg)
+![CodeQL](https://github.com/ps-resources/manage-users-action/workflows/CodeQL/badge.svg)
 
 ---
 
@@ -33,7 +32,7 @@ Add the following snippet to an existing workflow file:
 ```yml
 - name: Run Manager Users Action
   id: manager-users-action
-  uses: gateixeira-demos/manage-users-action@main
+  uses: ps-resources/manage-users-action@main
   with:
     token: ${{ secrets.GITHUB_TOKEN }}
     repositories: owner/repo1,owner/repo2

@@ -1,6 +1,6 @@
 name: 'Your name here'
 description: 'Run this action to provide access to users for certain repositories'
-author: 'gateixeira'
+author: 'ps-resources'
 inputs:
   users:
     required: true
