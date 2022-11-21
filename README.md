@@ -1,10 +1,5 @@
 # Manage Users Action
 
-![Check Dist/](https://github.com/ps-resources/manage-users-action/workflows/Check%20Dist%2F/badge.svg)
-![CodeQL](https://github.com/ps-resources/manage-users-action/workflows/CodeQL/badge.svg)
-
----
-
 This GitHub action adds and removes multiple users from multiple repositories repositories.
 
 If a user is already part of the repository, running it again with a different `permission` will change the permission of the user.
