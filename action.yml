@@ -1,4 +1,4 @@
-name: 'Your name here'
+name: 'Manage Users Action'
 description: 'Run this action to provide access to users for certain repositories'
 author: 'ps-resources'
 inputs:
